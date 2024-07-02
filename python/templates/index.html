@@ -93,8 +93,13 @@
                     // $('#transitionImage').hide();
                     return;  // 检查过渡效果是否应继续
                 }
+
+                // 检查是否有图片地址，如果没有，使用默认图片
+                var transitionSrc = currentImageUrl ? currentImageUrl : '12.jpg';
+
+                console.log(`#3`, transitionSrc);
                 $('#transitionImage').fadeOut(1000, function() {
-                    $(this).fadeIn(1000, startTransitionEffect);
+                    $(this).attr('src', transitionSrc).fadeIn(1000, startTransitionEffect);
                 });
                 // $('#transitionImage').attr('src', currentImageUrl).fadeIn(500); //
             }
