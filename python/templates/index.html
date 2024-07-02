@@ -1,59 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>生成图片</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <h1>生成图片</h1>
-    <form id="promptForm">
-        <label for="prompt">提示词：</label>
-        <input type="text" id="prompt" name="prompt">
-        <button type="submit">生成</button>
-    </form>
-    <div id="status"></div>
-    <div id="imageContainer"></div>
-
-    <script>
-        $(document).ready(function() {
-            $('#promptForm').submit(function(event) {
-                event.preventDefault();
-                $('#status').text('生成中...');
-                $('#imageContainer').empty();
-
-                $.post('/generate', $(this).serialize(), function(data) {
-                    if (data.task_id) {
-                        checkStatus(data.task_id);
-                    } else {
-                        $('#status').text('生成任务创建失败');
-                    }
-                });
-            });
-
-            function checkStatus(task_id) {
-                $.get(`/status/${task_id}`, function(data) {
-                    if (data.status === 'success') {
-                        $('#status').text('生成完成');
-                        $('#imageContainer').html(`<img src="${data.image_url}" alt="生成的图片">`);
-                    } else if (data.status === 'processing') {
-                        $('#status').text('生成中...');
-                        setTimeout(function() {
-                            checkStatus(task_id);
-                        }, 3000);
-                    } else {
-                        $('#status').text('生成失败');
-                    }
-                });
-            }
-        });
-    </script>
-</body>
-</html> -->
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,79 +29,74 @@
     <script>
         $(document).ready(function() {
             var currentImageUrl = '';  // 用于保存当前图片的URL
+            var transitionActive = false;  // 标志变量
 
             $('#promptForm').submit(function(event) {
+
+                console.log(`#1`);
+
                 event.preventDefault();
                 $('#status').text('生成中...');
-                // $('#transitionImage').attr('src', '').show();
 
-                $('#transitionImage').fadeOut(500, function() {
-                            // updateImageUrl(data.image_url);
-                            $('#generatedImage').attr('src', currentImageUrl).fadeIn(500);
-                        });
-                // $('#generatedImage').hide();
+                // 隐藏当前生成的图片
+                $('#generatedImage').hide();
 
+                // // 使用当前生成的图片作为过渡图片
+                // $('#transitionImage').attr('src', currentImageUrl).fadeIn(500); // 显示过渡图片或动画
+                
+                console.log(`#2`);
                 $.post('/generate', $(this).serialize(), function(data) {
                     if (data.task_id) {
+                        transitionActive = true;  // 开始过渡效果
+                        startTransitionEffect();
                         checkStatus(data.task_id);
                     } else {
                         $('#status').text('生成任务创建失败');
+                        $('#transitionImage').fadeOut(500);
                     }
                 });
             });
 
             function checkStatus(task_id) {
                 $.get(`/status/${task_id}`, function(data) {
+                    console.log(`#4`);
                     if (data.status === 'success') {
                         $('#status').text('生成完成');
-                        $('#transitionImage').fadeOut(500, function() {
-                            updateImageUrl(data.image_url);
-                            $('#generatedImage').attr('src', currentImageUrl).fadeIn(500);
-                        });
-
-
-                        // $('#transitionImage').hide();
-                        // $('#generatedImage').attr('src', data.image_url).show();
+                        updateImageUrl(data.image_url);
+                        transitionActive = false;  // 关闭过渡效果
+                        $('#transitionImage').attr('src', currentImageUrl).fadeIn(1000);
+                        // $('#generatedImage').attr('src', currentImageUrl).fadeIn(500);
                     } 
-                    else if (data.status === 'pending')
-                    {
-                        $('#status').text('挂起中...');
-                        // $('#transitionImage').hide();
-                        // $('#generatedImage').attr('src', data.image_url).show();
-                        setTimeout(function() {
-                            checkStatus(task_id);
-                        }, 300);
-                    } 
-                    else if (data.status === 'running')
-                    {
-                        $('#status').text('生成中...');
-                        // $('#transitionImage').hide();
-                        // $('#generatedImage').attr('src', data.image_url).show();
-                        setTimeout(function() {
-                            checkStatus(task_id);
-                        }, 300);
-                    } 
-                    else if (data.status === 'processing')
-                    {
+                    else if (data.status === 'pending' || data.status === 'running' || data.status === 'processing') {
                         $('#status').text('生成中...');
                         setTimeout(function() {
                             checkStatus(task_id);
-                        }, 300);
+                        }, 30);  // 每隔3秒检查一次生成状态
                     } 
-
                     else {
                         $('#status').text('生成失败');
+                        // $('#transitionImage').fadeOut(500);
+                        transitionActive = false;  // 关闭过渡效果
                     }
                 });
             }
             
             // 更新 currentImageUrl 的值
             function updateImageUrl(imageUrl) {
+                console.log(`#6`);
                 currentImageUrl = imageUrl;
-                console.log(`Updated currentImageUrl: ${currentImageUrl}`);
-                // 更新显示的图片
-                $('#generatedImage').attr('src', currentImageUrl);
-                console.log(`Set #generatedImage src to: ${currentImageUrl}`);
+                // $('#generatedImage').attr('src', currentImageUrl);
+            }
+            function startTransitionEffect() {
+                console.log(`#3`);
+                if (!transitionActive) {
+                    // $('#transitionImage').hide();
+                    return;  // 检查过渡效果是否应继续
+                }
+                $('#transitionImage').fadeOut(1000, function() {
+                    $(this).fadeIn(1000, startTransitionEffect);
+                });
+                // $('#transitionImage').attr('src', currentImageUrl).fadeIn(500); //
             }
         
         });

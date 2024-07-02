@@ -36,7 +36,7 @@ def generate_image():
     
     payload = {
         "max_new_tokens": 1024,
-        "model_id": "sgl_artist_v0.4.0",
+        "model_id": "artist-v5",
         "prompt": prompt,
         "n": 1,
         "repetition_penalty": 1.0,
