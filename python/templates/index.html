@@ -1,28 +1,169 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>生成图片</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>生成图片</h1>
+    <form id="promptForm">
+        <label for="prompt">提示词：</label>
+        <input type="text" id="prompt" name="prompt">
+        <button type="submit">生成</button>
+    </form>
+    <div id="status"></div>
+    <div id="imageContainer"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#promptForm').submit(function(event) {
+                event.preventDefault();
+                $('#status').text('生成中...');
+                $('#imageContainer').empty();
+
+                $.post('/generate', $(this).serialize(), function(data) {
+                    if (data.task_id) {
+                        checkStatus(data.task_id);
+                    } else {
+                        $('#status').text('生成任务创建失败');
+                    }
+                });
+            });
+
+            function checkStatus(task_id) {
+                $.get(`/status/${task_id}`, function(data) {
+                    if (data.status === 'success') {
+                        $('#status').text('生成完成');
+                        $('#imageContainer').html(`<img src="${data.image_url}" alt="生成的图片">`);
+                    } else if (data.status === 'processing') {
+                        $('#status').text('生成中...');
+                        setTimeout(function() {
+                            checkStatus(task_id);
+                        }, 3000);
+                    } else {
+                        $('#status').text('生成失败');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Flask Button</title>
+    <title>生成图片</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        #transitionImage {
+            display: none;
+        }
+        #generatedImage {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <button id="startButton">开始定时打印</button>
-    <button id="stopButton">停止定时打印</button>
+    <h1>生成图片</h1>
+    <form id="promptForm">
+        <label for="prompt">提示词：</label>
+        <input type="text" id="prompt" name="prompt">
+        <button type="submit">生成</button>
+    </form>
+    <div id="status"></div>
+    <div id="imageContainer">
+        <img id="transitionImage" src="" alt="生成中...">
+        <img id="generatedImage" src="" alt="生成的图片">
+    </div>
 
     <script>
-        $(document).ready(function(){
-            $('#startButton').click(function(){
-                $.post('/start_printing', function(data){
-                    alert("定时打印任务已开始");
+        $(document).ready(function() {
+            var currentImageUrl = '';  // 用于保存当前图片的URL
+
+            $('#promptForm').submit(function(event) {
+                event.preventDefault();
+                $('#status').text('生成中...');
+                // $('#transitionImage').attr('src', '').show();
+
+                $('#transitionImage').fadeOut(500, function() {
+                            // updateImageUrl(data.image_url);
+                            $('#generatedImage').attr('src', currentImageUrl).fadeIn(500);
+                        });
+                // $('#generatedImage').hide();
+
+                $.post('/generate', $(this).serialize(), function(data) {
+                    if (data.task_id) {
+                        checkStatus(data.task_id);
+                    } else {
+                        $('#status').text('生成任务创建失败');
+                    }
                 });
             });
 
-            $('#stopButton').click(function(){
-                $.post('/stop_printing', function(data){
-                    alert("定时打印任务已停止");
+            function checkStatus(task_id) {
+                $.get(`/status/${task_id}`, function(data) {
+                    if (data.status === 'success') {
+                        $('#status').text('生成完成');
+                        $('#transitionImage').fadeOut(500, function() {
+                            updateImageUrl(data.image_url);
+                            $('#generatedImage').attr('src', currentImageUrl).fadeIn(500);
+                        });
+
+
+                        // $('#transitionImage').hide();
+                        // $('#generatedImage').attr('src', data.image_url).show();
+                    } 
+                    else if (data.status === 'pending')
+                    {
+                        $('#status').text('挂起中...');
+                        // $('#transitionImage').hide();
+                        // $('#generatedImage').attr('src', data.image_url).show();
+                        setTimeout(function() {
+                            checkStatus(task_id);
+                        }, 300);
+                    } 
+                    else if (data.status === 'running')
+                    {
+                        $('#status').text('生成中...');
+                        // $('#transitionImage').hide();
+                        // $('#generatedImage').attr('src', data.image_url).show();
+                        setTimeout(function() {
+                            checkStatus(task_id);
+                        }, 300);
+                    } 
+                    else if (data.status === 'processing')
+                    {
+                        $('#status').text('生成中...');
+                        setTimeout(function() {
+                            checkStatus(task_id);
+                        }, 300);
+                    } 
+
+                    else {
+                        $('#status').text('生成失败');
+                    }
                 });
-            });
+            }
+            
+            // 更新 currentImageUrl 的值
+            function updateImageUrl(imageUrl) {
+                currentImageUrl = imageUrl;
+                console.log(`Updated currentImageUrl: ${currentImageUrl}`);
+                // 更新显示的图片
+                $('#generatedImage').attr('src', currentImageUrl);
+                console.log(`Set #generatedImage src to: ${currentImageUrl}`);
+            }
+        
         });
     </script>
 </body>
 </html>
+
+
+
