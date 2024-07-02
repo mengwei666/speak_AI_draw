@@ -4,5 +4,13 @@ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyRjUzMDg4QTlGOTg0REI5QUQ5NDc5NkZ
 
 b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIyRjUzMDg4QTlGOTg0REI5QUQ5NDc5NkZGN0NGNzUwRiIsImV4cCI6MTcxOTY2MzM3NywibmJmIjoxNzE5NjYxNTcyfQ.7GdXtKlmjPMS8qAtHQLBukVkt_Mb-3ojRjPopF1cArA'
 
-
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIyRjUzMDg4QTlGOTg0REI5QUQ5NDc5NkZGN0NGNzUwRiIsImV4cCI6MTcxOTY2NTU2MiwibmJmIjoxNzE5NjYzNzU3fQ.XadaIf2TL43Zi6iyJxHyHjBnlGU8y1hGFLLPKUYPJ14
+
+
+
+# 2024.07.02
+
+> 最新接口文档的地址如下
+> https://docs.google.com/document/d/1fecHRD-sMooUnnUe4H0SL9b5EB-6OHMjfZjxkvhUD5o/edit?usp=sharing
+> 如果谷歌文档无法打开，可使用飞书文档
+> https://p87mj0ne7k.feishu.cn/docx/ElrEdkpQbooXwgxF5x8c6Il3nBe?from=from_copylink
