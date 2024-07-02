@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Button</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <button id="startButton">开始定时打印</button>
+    <button id="stopButton">停止定时打印</button>
+
+    <script>
+        $(document).ready(function(){
+            $('#startButton').click(function(){
+                $.post('/start_printing', function(data){
+                    alert("定时打印任务已开始");
+                });
+            });
+
+            $('#stopButton').click(function(){
+                $.post('/stop_printing', function(data){
+                    alert("定时打印任务已停止");
+                });
+            });
+        });
+    </script>
+</body>
+</html>
